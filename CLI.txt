@@ -1,0 +1,2 @@
+	chmod +x flutter_mono_repo.sh (Gives a Permission for change mode to execute)
+	./flutter_mono_repo.sh
