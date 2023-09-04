@@ -13,6 +13,9 @@ if [[ -z "$folder_name" ]]; then
     exit 1
 fi
 
+# Initialize a variable to track the overall success status
+success=0
+
 # Check if a folder with the given name already exists in the Documents folder
 if [[ -d "$documents_dir/$folder_name" ]]; then
     echo "A folder with the name '$folder_name' already exists in the Documents folder. Please choose a different name."
@@ -184,6 +187,18 @@ else
     exit 1
 fi
 
+# Create svg.dart file inside the given name resources/bin folder
+resources_svg="$packages_folder/$folder_name"_resources/bin/svg.dart
+touch "$resources_svg"
+
+# Check if the pubspec.yaml file creation was successful
+if [[ $? -eq 0 ]]; then
+    echo "svg.dart file created successfully inside the 'given_name_resources' folder."
+else
+    echo "Failed to create the svg.dart file inside the 'given_name_resources' folder/bin folder."
+    exit 1
+fi
+
 # Create pubspec.yaml file inside the given name resources folder
 resources_pubspec_file="$packages_folder/$folder_name"_resources/pubspec.yaml
 touch "$resources_pubspec_file"
@@ -291,6 +306,19 @@ fi
 
 # Create lib folder inside the given name core folder
 mkdir "$packages_folder/$folder_name"_core/lib
+mkdir "$packages_folder/$folder_name"_core/lib/src
+
+# Create a Dart file inside the components/lib/ folder
+core_file="$packages_folder/$folder_name"_core/lib/"$folder_name"_core.dart
+touch "$core_file"
+
+# Check if the Dart file creation was successful
+if [[ $? -eq 0 ]]; then
+    echo "Created a Dart file '$core_file' inside the 'given_name_components/lib/' folder."
+else
+    echo "Failed to create the Dart file inside the 'given_name_components/lib/' folder."
+    exit 1
+fi
 
 # Check if the lib folder creation inside the given name core folder was successful
 if [[ $? -eq 0 ]]; then
@@ -302,7 +330,20 @@ fi
 
 # Create lib folder inside the given name components folder
 mkdir "$packages_folder/$folder_name"_components/lib
+mkdir "$packages_folder/$folder_name"_components/lib/src
+mkdir "$packages_folder/$folder_name"_components/lib/src/general
 
+# Create a Dart file inside the components/lib/ folder
+dart_file="$packages_folder/$folder_name"_components/lib/"$folder_name"_components.dart
+touch "$dart_file"
+
+# Check if the Dart file creation was successful
+if [[ $? -eq 0 ]]; then
+    echo "Created a Dart file '$dart_file' inside the 'given_name_components/lib/' folder."
+else
+    echo "Failed to create the Dart file inside the 'given_name_components/lib/' folder."
+    exit 1
+fi
 # Check if the lib folder creation inside the given name components folder was successful
 if [[ $? -eq 0 ]]; then
     echo "Created 'lib' folder inside the 'given_name_components' folder."
@@ -319,4 +360,14 @@ dart_frog create .
 # Navigate back to the original location
 cd -
 
+# Check if the entire process completed successfully
+if [[ $? -eq 0 ]]; then
+    echo "Entire process completed successfully."
+    cd "$documents_dir/$folder_name"  # Change to the root folder
+    code .  # Open the entire folder in VS Code
+else
+    echo "Some steps in the process failed. Check the error messages above."
+fi
 
+# Exit with the value of the success variable (0 for success, 1 for failure)
+exit $success

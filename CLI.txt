@@ -1,2 +1,3 @@
 	chmod +x flutter_mono_repo.sh (Gives a Permission for change mode to execute)
+	dart pub global activate melos (need to activate)
 	./flutter_mono_repo.sh
