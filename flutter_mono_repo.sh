@@ -1,11 +1,27 @@
-#!/bin/zsh
+# Get the operating system type
+os_type=$(uname)
 
-# Get the user's home directory
-documents_dir="$HOME/Documents/"
+# Check the operating system
+if [[ "$os_type" == "Darwin" ]]; then
+    # macOS specific commands or paths
+    echo "So You are  MAC User!! 💻"
+    documents_dir="$HOME/Documents/"
+    echo "Folder will be written in: $documents_dir"
+
+elif [[ "$os_type" == "MINGW"* ]]; then
+    # Windows specific commands or paths
+    echo "So You are Window User!! 🪟"
+    documents_dir="D:/"
+    echo "Folder will be written in: $documents_dir"
+else
+    echo "Unsupported operating system."
+    exit 1
+fi
 
 # Prompt the user for the folder name using read
-echo -n "Enter the folder name: "
+echo "Enter the App name: "
 read -r folder_name
+dart pub global activate melos
 
 # Check if the folder name is empty
 if [[ -z "$folder_name" ]]; then
@@ -131,7 +147,6 @@ fi
 
 # Run melos.yaml file using melos command
 cd "$documents_dir/$folder_name"
-melos bootstrap
 
 # Check if melos execution was successful
 if [[ $? -eq 0 ]]; then
@@ -369,5 +384,6 @@ else
     echo "Some steps in the process failed. Check the error messages above."
 fi
 
+melos bootstrap
 # Exit with the value of the success variable (0 for success, 1 for failure)
 exit $success
